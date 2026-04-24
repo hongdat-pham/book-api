@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
     title: body.title,
     author: body.author,
     status: "reading",
-    createdAt: new Date().toISOString,
+    createdAt: new Date().toISOString(),
   };
   books.push(newBook);
   await writeData(books);
@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const id = Number(req.params.id);
   const books = await readData();
-  const book = tasks.find((t) => t.id === id);
+  const book = books.find((t) => t.id === id);
 
   if (!book) return res.status(404).json({ error: "Book not found" });
 
