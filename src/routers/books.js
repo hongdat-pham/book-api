@@ -30,4 +30,38 @@ router.post("/", async (req, res) => {
   res.status(201).json(newBook);
 });
 
+router.get("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const books = await readData();
+  const book = tasks.find((t) => t.id === id);
+
+  if (!book) return res.status(404).json({ error: "Book not found" });
+
+  res.json(book);
+});
+
+router.patch("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const books = await readData();
+  const book = books.find((t) => t.id === id);
+
+  if (!book) return res.status(404).json({ error: "Book not found" });
+
+  const updated = { ...book, ...req.body, id };
+  const newBooks = books.map((t) => (t.id === id ? updated : t));
+  await writeData(newBooks);
+  res.json(updated);
+});
+
+router.delete("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const books = await readData();
+  const book = books.find((t) => t.id === id);
+
+  if (!book) return res.status(404).json({ error: "Book not found" });
+
+  const newBooks = books.filter((t) => t.id !== id);
+  await writeData(newBooks);
+  res.status(204).send();
+});
 export default router;
